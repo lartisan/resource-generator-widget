@@ -33,7 +33,7 @@ class MigrationHelpers
             return null;
         }
 
-        return ', ' . $string->implode(', ');
+        return ', '.$string->implode(', ');
     }
 
     public function setModifiers(array $column): ?string
@@ -68,7 +68,7 @@ class MigrationHelpers
                     };
                 }
 
-                $modifiers .= '->' . $methodName . '(' . $defaultValue . ')';
+                $modifiers .= '->'.$methodName.'('.$defaultValue.')';
             }
         }
 
@@ -85,7 +85,7 @@ class MigrationHelpers
     private function setDefaultValue(string $key, mixed $value): float|int|string
     {
         if (is_numeric($value)) {
-            return "$key: " .  $value;
+            return "$key: ".$value;
         }
 
         if ($value === true || $value === 'true') {
@@ -96,7 +96,7 @@ class MigrationHelpers
             return "$key: false";
         }
 
-        return "'$key:" . $value . "'";
+        return "'$key:".$value."'";
     }
 
     private function defaultParamForDataType(string $dataType, string $key): mixed

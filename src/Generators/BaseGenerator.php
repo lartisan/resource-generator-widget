@@ -7,11 +7,11 @@ use Lartisan\ResourceGenerator\Traits\Resolvable;
 
 class BaseGenerator
 {
-    use Resolvable;
     use CanManipulateFiles;
+    use Resolvable;
 
     protected function getDefaultStubPath(): string
     {
-        return __DIR__ . '/../../resources/stubs';
+        return __DIR__.'/../../resources/stubs';
     }
 }

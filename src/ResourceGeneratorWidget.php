@@ -2,10 +2,6 @@
 
 namespace Lartisan\ResourceGenerator;
 
-use Lartisan\ResourceGenerator\Fields\MigrationStepFields;
-use Lartisan\ResourceGenerator\Fields\FactoryStepFields;
-use Lartisan\ResourceGenerator\Fields\FilamentResourceStepFields;
-use Lartisan\ResourceGenerator\Fields\ModelStepFields;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -13,11 +9,15 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets\Widget;
+use Lartisan\ResourceGenerator\Fields\FactoryStepFields;
+use Lartisan\ResourceGenerator\Fields\FilamentResourceStepFields;
+use Lartisan\ResourceGenerator\Fields\MigrationStepFields;
+use Lartisan\ResourceGenerator\Fields\ModelStepFields;
 
-class ResourceGeneratorWidget extends Widget implements HasForms, HasActions
+class ResourceGeneratorWidget extends Widget implements HasActions, HasForms
 {
-    use InteractsWithForms;
     use InteractsWithActions;
+    use InteractsWithForms;
 
     protected static string $view = 'resource-generator-widget::resource-generator-widget';
 
@@ -37,7 +37,7 @@ class ResourceGeneratorWidget extends Widget implements HasForms, HasActions
                 FactoryStepFields::make()->generate(),
                 FilamentResourceStepFields::make()->generate(),
             ])
-            ->action(fn(array $data) => ResourceGeneratorManager::make()->handle($data))
+            ->action(fn (array $data) => ResourceGeneratorManager::make()->handle($data))
             ->modalWidth(MaxWidth::SixExtraLarge);
     }
 }

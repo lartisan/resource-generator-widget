@@ -30,7 +30,6 @@ class SeederGenerator extends BaseGenerator
         $this->createSeeder($seederClassName, $seederNamespace, $modelClassName, $modelNamespace, $data);
     }
 
-
     private function createSeeder(
         string $seederClassName,
         string $seederNamespace,
@@ -42,12 +41,12 @@ class SeederGenerator extends BaseGenerator
         $factoryData = [
             'seederNamespace' => $seederNamespace,
             'seederClass' => $seederClassName,
-            'modelNamespace' => $modelNamespace . '\\' . $modelClassName,
+            'modelNamespace' => $modelNamespace.'\\'.$modelClassName,
             'modelClass' => $modelClassName,
             'count' => data_get($data, 'seeders_count'),
         ];
 
-        $targetPath = database_path('seeders/' . $seederClassName . '.php');
+        $targetPath = database_path('seeders/'.$seederClassName.'.php');
 
         $this->copyStubToApp($factoryStub, $targetPath, $factoryData);
     }

@@ -2,9 +2,9 @@
 
 namespace Lartisan\ResourceGenerator\Fields;
 
-use Lartisan\ResourceGenerator\Traits\Resolvable;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Lartisan\ResourceGenerator\Traits\Resolvable;
 
 class FilamentResourceStepFields
 {

@@ -2,9 +2,9 @@
 
 namespace Lartisan\ResourceGenerator\Fields;
 
+use Filament\Forms;
 use Illuminate\Support\Facades\Schema;
 use Lartisan\ResourceGenerator\Traits\Resolvable;
-use Filament\Forms;
 
 class MigrationStepFields
 {
@@ -29,12 +29,12 @@ class MigrationStepFields
                             ->required()
                             ->rules([
                                 function (Forms\Get $get) {
-                                    return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    return function (string $attribute, $value, \Closure $fail) {
                                         if (Schema::hasTable($value)) {
                                             $fail("The table '$value' already exists.");
                                         }
                                     };
-                                }
+                                },
                             ])
                             ->helperText(fn () => str('The table name should use the **snake_case** convention')->inlineMarkdown()->toHtmlString())
                             ->afterStateUpdated(
@@ -66,7 +66,7 @@ class MigrationStepFields
 
                 /*$this->indexesGroup(),*/ // todo: Phase 2 - Add composite indexes?
 
-                $this->databaseColumnsRepeater()
+                $this->databaseColumnsRepeater(),
             ])
             ->afterValidation(function (Forms\Get $get, Forms\Set $set) {
                 $databaseColumns = $get('database_columns');
@@ -76,7 +76,6 @@ class MigrationStepFields
                 $set('resource_name', str($get('table_name'))->studly()->singular()->append('Resource'));
             });
     }
-
 
     // todo: Phase 2 - Add composite indexes?
     private function indexesGroup(): Forms\Components\Fieldset
@@ -111,19 +110,19 @@ class MigrationStepFields
                         Forms\Components\TextInput::make('primary_key_values')
                             ->label(false)
                             ->placeholder('E.g.: column,another_column,...')
-                            ->disabled(fn(Forms\Get $get) => $get('is_primary_key') === false)
+                            ->disabled(fn (Forms\Get $get) => $get('is_primary_key') === false)
                             ->helperText('Comma separated values for multiple columns'),
 
                         Forms\Components\TextInput::make('unique_values')
                             ->label(false)
                             ->placeholder('E.g.: column,another_column,...')
-                            ->disabled(fn(Forms\Get $get) => $get('is_unique') === false)
+                            ->disabled(fn (Forms\Get $get) => $get('is_unique') === false)
                             ->helperText('Comma separated values for multiple columns'),
 
                         Forms\Components\TextInput::make('index_values')
                             ->label(false)
                             ->placeholder('E.g.: column,another_column,...')
-                            ->disabled(fn(Forms\Get $get) => $get('has_index') === false)
+                            ->disabled(fn (Forms\Get $get) => $get('has_index') === false)
                             ->helperText('Comma separated values for multiple columns'),
                     ]),
             ]);
@@ -137,7 +136,7 @@ class MigrationStepFields
             ->addActionLabel('Add column')
             ->columnSpanFull()
             ->columns(16)
-            ->itemLabel(fn(array $state): ?string => str($state['column_name'])->headline() ?? null)
+            ->itemLabel(fn (array $state): ?string => str($state['column_name'])->headline() ?? null)
             ->live() // Important to make the state available to the model and factory steps
             ->schema([
                 // DataType Group
@@ -169,7 +168,7 @@ class MigrationStepFields
                         Forms\Components\TextInput::make('column_name')
                             ->label('Column name')
                             ->columnSpan(4)
-                            ->hidden(fn(Forms\Get $get) => $this->isColumnWithNoParams($get('data_type')))
+                            ->hidden(fn (Forms\Get $get) => $this->isColumnWithNoParams($get('data_type')))
                             ->lazy()
                             ->required(),
 
@@ -177,7 +176,7 @@ class MigrationStepFields
                         Forms\Components\Group::make()
                             ->columnSpan(8)
                             ->columns(8)
-                            ->hidden(fn(Forms\Get $get) => $this->isColumnWithVoidReturn($get('data_type')))
+                            ->hidden(fn (Forms\Get $get) => $this->isColumnWithVoidReturn($get('data_type')))
                             ->schema([
                                 // Index Types: Primary Key
                                 Forms\Components\Toggle::make('is_primary_key')
@@ -199,14 +198,14 @@ class MigrationStepFields
                                         function (Forms\Get $get) {
                                             return function (string $attribute, $value, \Closure $fail) use ($get) {
                                                 $hasNoPrimaryKey = collect($get('../../database_columns'))
-                                                        ->filter(fn ($column) => $column['is_primary_key'] === true)
-                                                        ->count() === 0;
+                                                    ->filter(fn ($column) => $column['is_primary_key'] === true)
+                                                    ->count() === 0;
 
                                                 if ($value === false && $hasNoPrimaryKey) {
                                                     $fail('A column with primary key is required.');
                                                 }
                                             };
-                                        }
+                                        },
                                     ])
                                     ->fixIndistinctState()
                                     ->label('Primary')
@@ -276,14 +275,14 @@ class MigrationStepFields
                                 Forms\Components\TextInput::make('default_value')
                                     ->label('Default value')
                                     ->columnSpan(2)
-                                    ->hidden(fn(Forms\Get $get) => $get('has_default') === false)
+                                    ->hidden(fn (Forms\Get $get) => $get('has_default') === false)
                                     ->disabled(
                                         fn (Forms\Get $get) => $get('is_primary_key') === true
                                     )
                                     ->lazy()
                                     ->placeholder('E.g.: 0,1,2,...'),
                             ]),
-                    ])
+                    ]),
             ])
             ->cloneable()
             ->collapsible()
@@ -316,15 +315,15 @@ class MigrationStepFields
 
         collect(config('resource-generator-widget.factory.faker_types'))
             ->keys()
-            ->map(fn($item) => $defaultFields->put($item, null))
+            ->map(fn ($item) => $defaultFields->put($item, null))
             ->toArray();
 
         collect($databaseColumns)
             ->pluck('column_name')
-            ->each(fn($columnName) => $attributes->push([
+            ->each(fn ($columnName) => $attributes->push([
                 'column_name' => $columnName,
                 'factory_type' => null,
-                ...$defaultFields
+                ...$defaultFields,
             ]));
 
         $set('factory_fields', $attributes->toArray());
@@ -362,22 +361,22 @@ class MigrationStepFields
 
         $fields = collect();
 
-        foreach($this->getParamsForDataType($dataType) as $field => $value) {
+        foreach ($this->getParamsForDataType($dataType) as $field => $value) {
             if (is_bool($value)) {
                 ray([$field => $value]);
             }
             match (true) {
                 is_bool($value) => $fields->push(
-                    Forms\Components\Checkbox::make('params.' . $field)
+                    Forms\Components\Checkbox::make('params.'.$field)
                         ->label(str($field)->title())
                         ->default($value)
                         ->lazy()
                         ->inline(false)
                 ),
                 default => $fields->push(
-                    Forms\Components\TextInput::make('params.' . $field)
+                    Forms\Components\TextInput::make('params.'.$field)
                         ->label(str($field)->title())
-                        ->placeholder('Default: ' . $value)
+                        ->placeholder('Default: '.$value)
                 )
             };
         }

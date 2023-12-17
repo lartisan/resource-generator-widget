@@ -2,12 +2,12 @@
 
 namespace Lartisan\ResourceGenerator\Fields;
 
-use Lartisan\ResourceGenerator\Traits\Resolvable;
-use Lartisan\ResourceGenerator\Helpers\ResourceGeneratorFakerHelpers;
 use Filament\Forms;
 use Filament\Forms\Components\Component;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
+use Lartisan\ResourceGenerator\Helpers\ResourceGeneratorFakerHelpers;
+use Lartisan\ResourceGenerator\Traits\Resolvable;
 
 class FactoryStepFields
 {
@@ -97,7 +97,7 @@ class FactoryStepFields
                             ->default(function (Forms\Get $get, Component $component) {
                                 $state = collect($component->getContainer()->getComponents())
                                     ->filter(function (Component $component) {
-                                        return $component->getStatePath() == "mountedActionsData.0.factory_fields";
+                                        return $component->getStatePath() == 'mountedActionsData.0.factory_fields';
                                     })
                                     ->last()
                                     ?->getState();
@@ -116,10 +116,9 @@ class FactoryStepFields
                             ->required(),
 
                         ...$this->addFieldsForFakerTypes(),
-                    ])
+                    ]),
             ]);
     }
-
 
     private function setFactoryTypeOptions(): array
     {

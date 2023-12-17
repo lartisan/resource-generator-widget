@@ -20,7 +20,6 @@ class FactoryGenerator extends BaseGenerator
         $this->createFactory($className, $namespace, $data);
     }
 
-
     private function createFactory(string $className, string $namespace, array $data): void
     {
         $factoryStub = 'factory';
@@ -30,7 +29,7 @@ class FactoryGenerator extends BaseGenerator
             'columns' => $this->setColumns(data_get($data, 'factory_fields')),
         ];
 
-        $targetPath = database_path('factories/' . $className . '.php');
+        $targetPath = database_path('factories/'.$className.'.php');
 
         $this->copyStubToApp($factoryStub, $targetPath, $factoryData);
     }

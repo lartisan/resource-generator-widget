@@ -8,7 +8,8 @@ class ModelGenerator extends BaseGenerator
 {
     public function __construct(
         private readonly ModelHelpers $helpers,
-    ) {}
+    ) {
+    }
 
     public function handle(array $data): void
     {
@@ -25,7 +26,6 @@ class ModelGenerator extends BaseGenerator
 
         $this->createModel($className, $namespace, $data);
     }
-
 
     private function createModel(string $className, string $namespace, array $data): void
     {
@@ -44,7 +44,7 @@ class ModelGenerator extends BaseGenerator
             $modelData['primaryKey'] = data_get($this->helpers->getPrimaryKey($data), 'column_name');
         }
 
-        $targetPath = app_path('Models/' . $className . '.php');
+        $targetPath = app_path('Models/'.$className.'.php');
 
         $this->copyStubToApp($modelStub, $targetPath, $modelData);
     }
@@ -53,7 +53,7 @@ class ModelGenerator extends BaseGenerator
     {
         $attributes = collect($attributes)
             ->filter(
-                fn ($attribute) => !$this->helpers->isExcluded($attribute) && $this->helpers->isFillableField($attribute)
+                fn ($attribute) => ! $this->helpers->isExcluded($attribute) && $this->helpers->isFillableField($attribute)
             );
 
         if ($attributes->isEmpty()) {
@@ -95,7 +95,7 @@ class ModelGenerator extends BaseGenerator
             $castType = data_get($attribute, 'cast_type');
 
             if ($castType === 'decimal:precision') {
-                $castType = 'decimal:' . data_get($attribute, 'decimal_precision');
+                $castType = 'decimal:'.data_get($attribute, 'decimal_precision');
             }
 
             $string .= <<<PHP

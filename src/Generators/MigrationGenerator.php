@@ -9,12 +9,13 @@ class MigrationGenerator extends BaseGenerator
 {
     public function __construct(
         private readonly MigrationHelpers $helpers,
-    ) {}
+    ) {
+    }
 
     public function handle(array $data): void
     {
         $tableName = str($data['table_name'])->plural()->snake();
-        $targetPath = database_path('migrations/' . now()->format('Y_m_d_His') . '_create_' . $tableName . '_table.php');
+        $targetPath = database_path('migrations/'.now()->format('Y_m_d_His').'_create_'.$tableName.'_table.php');
 
         $this->copyStubToApp('migration.create', $targetPath, [
             'table' => $tableName,
@@ -26,7 +27,6 @@ class MigrationGenerator extends BaseGenerator
         }
     }
 
-
     public function setMigrationColumns(array $columns): string
     {
         $string = '';
@@ -36,7 +36,6 @@ class MigrationGenerator extends BaseGenerator
             $columnName = data_get($column, 'column_name');
             $defaultValues = $this->helpers->getColumnDefaultValues($column);
             $modifiers = $this->helpers->setModifiers($column);
-
 
             $string .= <<<PHP
                     \$table->$columnType('$columnName'$defaultValues)$modifiers;

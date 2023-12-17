@@ -2,9 +2,8 @@
 
 namespace Lartisan\ResourceGenerator\Fields;
 
-use Lartisan\ResourceGenerator\Traits\Resolvable;
 use Filament\Forms;
-use Filament\Forms\Components\Component;
+use Lartisan\ResourceGenerator\Traits\Resolvable;
 
 class ModelStepFields
 {
@@ -41,7 +40,7 @@ class ModelStepFields
             ->addable(false)
             ->columnSpanFull()
             ->columns(12)
-            ->itemLabel(fn(array $state): ?string => str($state['attribute_name'])->headline() ?? null)
+            ->itemLabel(fn (array $state): ?string => str($state['attribute_name'])->headline() ?? null)
             ->live()
             ->deletable(false)
             ->schema([
@@ -96,7 +95,7 @@ class ModelStepFields
     {
         return [
             'array' => 'array',
-//            'AsStringable::class',
+            //            'AsStringable::class',
             'boolean' => 'boolean',
             'collection' => 'collection',
             'date' => 'date',

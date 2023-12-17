@@ -7,7 +7,7 @@ trait NeedsPrimaryKey
     public function getPrimaryKey(array $data): ?array
     {
         return collect(data_get($data, 'database_columns'))
-            ->filter(fn($column) => $this->isPrimaryKey($column))
+            ->filter(fn ($column) => $this->isPrimaryKey($column))
             ->first();
     }
 
