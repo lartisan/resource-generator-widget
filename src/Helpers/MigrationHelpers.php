@@ -16,7 +16,6 @@ class MigrationHelpers
 
         $string = collect();
 
-        ray($params);
         foreach ($params as $key => $value) {
             if (is_null($value)) {
                 continue;

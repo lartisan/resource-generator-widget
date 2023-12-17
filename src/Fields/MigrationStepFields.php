@@ -362,9 +362,6 @@ class MigrationStepFields
         $fields = collect();
 
         foreach ($this->getParamsForDataType($dataType) as $field => $value) {
-            if (is_bool($value)) {
-                ray([$field => $value]);
-            }
             match (true) {
                 is_bool($value) => $fields->push(
                     Forms\Components\Checkbox::make('params.'.$field)
