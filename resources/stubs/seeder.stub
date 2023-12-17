@@ -1,0 +1,15 @@
+<?php
+
+namespace {{ seederNamespace }};
+
+use {{ modelNamespace }};
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class {{ seederClass }} extends Seeder
+{
+    public function run(): void
+    {
+        {{ modelClass }}::factory()->count({{ count }})->create();
+    }
+}
