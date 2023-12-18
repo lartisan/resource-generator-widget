@@ -28,13 +28,20 @@ class ResourceGeneratorFakerHelpers
     private function baseComponent(
         int|string $field,
         mixed $defaultValue
-    ): Forms\Components\TagsInput|Forms\Components\Toggle|Forms\Components\TextInput {
+    ): Forms\Components\Field {
         return match (true) {
-            is_bool($defaultValue) => $this->toggleComponent($field),
+            is_bool($defaultValue) => $this->checkboxComponent($field),
             is_numeric($defaultValue) => $this->numericInputComponent($field),
-            //            is_array($defaultValue) => $this->tagsInputComponent($field),
+//            is_array($defaultValue) => $this->tagsInputComponent($field),
             default => $this->textInputComponent($field),
         };
+    }
+
+    private function checkboxComponent(int|string $field): Forms\Components\Checkbox
+    {
+        return Forms\Components\Checkbox::make($field)
+            ->inline(false)
+            ->columnSpan(2);
     }
 
     private function toggleComponent(int|string $field): Forms\Components\Toggle

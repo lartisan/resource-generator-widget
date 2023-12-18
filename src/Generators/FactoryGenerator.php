@@ -26,7 +26,7 @@ class FactoryGenerator extends BaseGenerator
         $factoryData = [
             'factoryNamespace' => $namespace,
             'factory' => $className,
-            'columns' => $this->setColumns(data_get($data, 'factory_fields')),
+            'columns' => $this->setFactoryColumns(data_get($data, 'factory_fields')),
         ];
 
         $targetPath = database_path('factories/'.$className.'.php');
@@ -34,7 +34,7 @@ class FactoryGenerator extends BaseGenerator
         $this->copyStubToApp($factoryStub, $targetPath, $factoryData);
     }
 
-    private function setColumns(array $columns): string
+    private function setFactoryColumns(array $columns): string
     {
         $string = '';
 
@@ -65,7 +65,7 @@ class FactoryGenerator extends BaseGenerator
             ->count() > 0;
     }
 
-    private function getDefaultParameters($factoryType): array
+    private function getDefaultParametersFor($factoryType): array
     {
         return collect(config('resource-generator-widget.factory.faker_types'))
             ->filter(fn ($type, $key) => $key === $factoryType && is_array($type))
@@ -77,12 +77,26 @@ class FactoryGenerator extends BaseGenerator
         $parameters = collect();
         $columnName = data_get($columnData, 'column_name');
 
-        foreach ($this->getDefaultParameters($factoryType) as $parameter => $value) {
-            if ($columnData[$parameter] !== null) {
-                $value = $columnData[$parameter];
+        foreach ($this->getDefaultParametersFor($factoryType) as $key => $value) {
+            if ($columnData[$key] !== null) {
+                $value = $columnData[$key];
             }
 
-            $parameters->put($parameter, is_string($value) ? "'$value'" : $value);
+            $value = match (true) {
+                is_numeric($value) && intval($value) == $value => intval($value),
+                $value === null || $value === 'null' => <<<PHP
+                                                        null
+                                                        PHP,
+                $value === true || $value == 'true' => <<<PHP
+                                                        true
+                                                        PHP,
+                $value === false || $value == 'false' => <<<PHP
+                                                        false
+                                                        PHP,
+                default => str($value)->wrap("'"),
+            };
+
+            $parameters->put($key, $value);
         }
 
         $parameters = $parameters->implode(', ');
