@@ -41,6 +41,7 @@ class FilamentResourceStepFields
                     ->schema([
                         Forms\Components\Toggle::make('soft-deletes')
                             ->label('Has Soft Deletes')
+                            ->visible(fn (Forms\Get $get) => $get('has_soft_deletes') === true)
                             ->default(false),
 
                         Forms\Components\Toggle::make('view')

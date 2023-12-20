@@ -73,7 +73,9 @@ class MigrationStepFields
 
                 $this->mutateFillableFields($databaseColumns, $set);
                 $this->mutateFactoryColumns($databaseColumns, $set);
+
                 $set('resource_name', str($get('table_name'))->studly()->singular()->append('Resource'));
+                $set('has_soft_deletes', $this->schemaHasSoftDeletesColumn($databaseColumns) ?? false);
             });
     }
 
@@ -385,5 +387,12 @@ class MigrationStepFields
     {
         return collect(config('resource-generator-widget.database.columns_with_default_values'))
             ->get($dataType) ?? [];
+    }
+
+    private function schemaHasSoftDeletesColumn(mixed $databaseColumns): bool
+    {
+        return collect($databaseColumns)
+            ->filter(fn($column) => $column['data_type'] === 'softDeletes')
+            ->isNotEmpty();
     }
 }
