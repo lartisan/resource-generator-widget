@@ -37,6 +37,7 @@ class ModelGenerator extends BaseGenerator
             'class' => $className,
             'fillable' => $this->setFillableAttributes($attributes),
             'castable' => $this->setCastableAttributes($attributes),
+            'soft_deletes' => $this->setSoftDeletesTrait($data),
         ];
 
         if ($this->helpers->hasPrimaryKey($data)) {
@@ -108,5 +109,16 @@ class ModelGenerator extends BaseGenerator
         return <<<PHP
                 \n\n\tprotected \$casts = $string;
                 PHP;
+    }
+
+    private function setSoftDeletesTrait(array $data): string
+    {
+        $string = <<<PHP
+                \n\tuse SoftDeletes;
+                PHP;
+
+        return $this->helpers->hasSoftDeletes($data)
+            ? $string
+            : '';
     }
 }

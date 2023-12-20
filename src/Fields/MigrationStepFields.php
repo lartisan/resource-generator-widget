@@ -151,6 +151,7 @@ class MigrationStepFields
                             ->lazy()
                             ->columnSpan(4)
                             ->options(config('resource-generator-widget.database.column_types'))
+                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $state === 'softDeletes' ? $set('column_name','deleted_at') : '')
                             ->searchable()
                             ->required(),
 
@@ -171,6 +172,7 @@ class MigrationStepFields
                             ->label('Column name')
                             ->columnSpan(4)
                             ->hidden(fn (Forms\Get $get) => $this->isColumnWithNoParams($get('data_type')))
+                            ->readOnly(fn (Forms\Get $get) => $get('data_type') === 'softDeletes')
                             ->lazy()
                             ->required(),
 

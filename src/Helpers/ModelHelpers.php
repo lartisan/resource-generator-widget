@@ -23,4 +23,11 @@ class ModelHelpers
             config('resource-generator-widget.model.not_fillable_fields')
         );
     }
+
+    public function hasSoftDeletes(array $data): bool
+    {
+        return collect(data_get($data, 'database_columns'))
+            ->filter(fn ($column) => $column['data_type'] === 'softDeletes')
+            ->isNotEmpty();
+    }
 }
