@@ -33,9 +33,9 @@ class ResourceGeneratorWidget extends Widget implements HasActions, HasForms
             ->color('gray')
             ->steps([
                 MigrationStepFields::make()->generate(),
-                ModelStepFields::make()->generate(),
+//                ModelStepFields::make()->generate(),
                 FactoryStepFields::make()->generate(),
-                FilamentResourceStepFields::make()->generate(),
+//                FilamentResourceStepFields::make()->generate(),
             ])
             ->action(fn (array $data) => ResourceGeneratorManager::make()->handle($data))
             ->modalWidth(MaxWidth::SixExtraLarge);

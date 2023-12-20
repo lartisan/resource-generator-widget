@@ -24,7 +24,7 @@ class MigrationHelpers
             $dataType = data_get($column, 'data_type');
 
             if ($value != $this->defaultParamForDataType($dataType, $key)) {
-                $string->push($this->setDefaultValue($key, $value));
+                $string->push($this->getDefaultKeyValuePairs($key, $value));
             }
         }
 
@@ -81,7 +81,7 @@ class MigrationHelpers
         ];
     }
 
-    private function setDefaultValue(string $key, mixed $value): float|int|string
+    private function getDefaultKeyValuePairs(string $key, mixed $value): float|int|string
     {
         if (is_numeric($value)) {
             return "$key: ".$value;

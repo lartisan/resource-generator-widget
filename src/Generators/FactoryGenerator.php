@@ -38,12 +38,12 @@ class FactoryGenerator extends BaseGenerator
     {
         $string = '';
 
-        foreach ($columns as $index => $columnData) {
-            $columnName = data_get($columnData, 'column_name');
-            $factoryType = data_get($columnData, 'factory_type');
+        foreach ($columns as $index => $column) {
+            $columnName = data_get($column, 'column_name');
+            $factoryType = data_get($column, 'factory_type');
 
             if ($this->isMethod($factoryType)) {
-                $string .= $this->buildMethodWithParameters($factoryType, $columnData);
+                $string .= $this->buildMethodWithParameters($factoryType, $column);
             } else {
                 $string .= <<<PHP
                     '$columnName' => fake()->$factoryType,
@@ -65,38 +65,22 @@ class FactoryGenerator extends BaseGenerator
             ->count() > 0;
     }
 
-    private function getDefaultParametersFor($factoryType): array
-    {
-        return collect(config('resource-generator-widget.factory.faker_types'))
-            ->filter(fn ($type, $key) => $key === $factoryType && is_array($type))
-            ->first();
-    }
-
-    private function buildMethodWithParameters(string $factoryType, array $columnData): string
+    private function buildMethodWithParameters(string $factoryType, array $column): ?string
     {
         $parameters = collect();
-        $columnName = data_get($columnData, 'column_name');
+        $columnName = data_get($column, 'column_name');
+        $defaultParams = $this->getDefaultParametersFor($factoryType);
 
-        foreach ($this->getDefaultParametersFor($factoryType) as $key => $value) {
-            if ($columnData[$key] !== null) {
-                $value = $columnData[$key];
+        foreach ($defaultParams as $key => $defaultValue) {
+            $inputValue = data_get($column, $key);
+
+            if ($inputValue != $defaultValue) {
+                $parameters->push($this->getDefaultKeyValuePairs($key, $inputValue));
             }
+        }
 
-            $value = match (true) {
-                is_numeric($value) && intval($value) == $value => intval($value),
-                $value === null || $value === 'null' => <<<PHP
-                                                        null
-                                                        PHP,
-                $value === true || $value == 'true' => <<<PHP
-                                                        true
-                                                        PHP,
-                $value === false || $value == 'false' => <<<PHP
-                                                        false
-                                                        PHP,
-                default => str($value)->wrap("'"),
-            };
-
-            $parameters->put($key, $value);
+        if ($parameters->isEmpty()) {
+            return null;
         }
 
         $parameters = $parameters->implode(', ');
@@ -105,4 +89,33 @@ class FactoryGenerator extends BaseGenerator
                 '$columnName' => fake()->$factoryType($parameters),
                 PHP;
     }
+
+    private function getDefaultParametersFor($factoryType): array
+    {
+        return collect(config('resource-generator-widget.factory.faker_types'))
+            ->filter(fn ($type, $key) => $key === $factoryType && is_array($type))
+            ->first();
+    }
+
+    private function getDefaultKeyValuePairs(string $key, mixed $value): float|int|string
+    {
+        if (is_numeric($value)) {
+            return "$key: ".$value;
+        }
+
+        if ($value === true || $value === 'true') {
+            return "$key: true";
+        }
+
+        if ($value === false || $value === 'false') {
+            return "$key: false";
+        }
+
+        if ($value === null || $value === 'null') {
+            return "$key: null";
+        }
+
+        return "'$key:".$value."'";
+    }
+
 }
