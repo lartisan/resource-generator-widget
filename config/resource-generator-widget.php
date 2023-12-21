@@ -231,8 +231,8 @@ return [
                 'max' => null,
             ],
             'numberBetween' => [
-                'min' => 0,
-                'max' => PHP_INT_MAX,
+                'int1' => 0,
+                'int2' => PHP_INT_MAX,
             ],
             'randomLetter' => 'randomLetter',
 

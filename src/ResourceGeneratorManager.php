@@ -18,7 +18,7 @@ class ResourceGeneratorManager
     {
         MigrationGenerator::make()->handle($data);
 
-//        ModelGenerator::make()->handle($data);
+        ModelGenerator::make()->handle($data);
 
         if (data_get($data, 'create_factory', false)) {
             FactoryGenerator::make()->handle($data);
@@ -28,7 +28,7 @@ class ResourceGeneratorManager
             }
         }
 
-//        FilamentResourceGenerator::make()->handle($data);
+        FilamentResourceGenerator::make()->handle($data);
 
         Notification::make()
             ->success()
