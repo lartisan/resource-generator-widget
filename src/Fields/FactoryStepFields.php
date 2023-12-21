@@ -36,13 +36,14 @@ class FactoryStepFields
                             ->default(false)
                             ->inline(false),
 
-                        Forms\Components\TextInput::make('seeders_count')
+                        /* TODO: Add this feature? */
+                        /*Forms\Components\TextInput::make('seeders_count')
                             ->numeric()
                             ->visible(fn (Forms\Get $get) => $get('create_seeder') === true)
                             ->rule('min:1')
-                            ->required(),
+                            ->required(),*/
 
-                        /* TODO: Add this feature */
+                        /* TODO: Add this feature? */
                         /*Forms\Components\Toggle::make('seed_database')
                             ->columnSpan(1)
                             ->lazy()
@@ -92,18 +93,7 @@ class FactoryStepFields
                         Forms\Components\TextInput::make('column_name')
                             ->label('Column name')
                             ->columnSpan(3)
-                            ->readOnly()
-                            ->lazy()
-                            ->default(function (Forms\Get $get, Component $component) {
-                                $state = collect($component->getContainer()->getComponents())
-                                    ->filter(function (Component $component) {
-                                        return $component->getStatePath() == 'mountedActionsData.0.factory_fields';
-                                    })
-                                    ->last()
-                                    ?->getState();
-
-                                return $state['column_name'] ?? null;
-                            }),
+                            ->readOnly(),
 
                         Forms\Components\Select::make('factory_type')
                             ->label('Factory type')
@@ -111,6 +101,7 @@ class FactoryStepFields
                             ->options(
                                 $this->setFactoryTypeOptions()
                             )
+                            ->hidden(fn (Forms\Get $get) => $get('column_name') === $get('../../primary_key_column'))
                             ->live()
                             ->searchable()
                             ->required(),

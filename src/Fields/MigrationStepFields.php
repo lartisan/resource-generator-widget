@@ -79,6 +79,7 @@ class MigrationStepFields
             });
     }
 
+
     // todo: Phase 2 - Add composite indexes?
     private function indexesGroup(): Forms\Components\Fieldset
     {
@@ -294,6 +295,32 @@ class MigrationStepFields
     }
 
     // Helpers
+    private function mutateFactoryColumns(mixed $databaseColumns, Forms\Set $set): void
+    {
+        $attributes = collect();
+        $defaultFields = collect();
+
+        $columnWithPrimaryKey = collect($databaseColumns)
+            ->filter(fn ($column) => $column['is_primary_key'] === true)
+            ->first();
+
+        collect(config('resource-generator-widget.factory.faker_types'))
+            ->keys()
+            ->map(fn ($item) => $defaultFields->put($item, null))
+            ->toArray();
+
+        collect($databaseColumns)
+            ->pluck('column_name')
+            ->each(fn ($columnName) => $attributes->push([
+                'column_name' => $columnName,
+                'factory_type' => null,
+                ...$defaultFields,
+            ]));
+
+        $set('factory_fields', $attributes->toArray());
+        $set('primary_key_column', $columnWithPrimaryKey['column_name']);
+    }
+
     private function mutateFillableFields(mixed $databaseColumns, Forms\Set $set): void
     {
         $attributes = collect();
@@ -310,27 +337,6 @@ class MigrationStepFields
             });
 
         $set('attributes', $attributes->toArray());
-    }
-
-    private function mutateFactoryColumns(mixed $databaseColumns, Forms\Set $set): void
-    {
-        $attributes = collect();
-        $defaultFields = collect();
-
-        collect(config('resource-generator-widget.factory.faker_types'))
-            ->keys()
-            ->map(fn ($item) => $defaultFields->put($item, null))
-            ->toArray();
-
-        collect($databaseColumns)
-            ->pluck('column_name')
-            ->each(fn ($columnName) => $attributes->push([
-                'column_name' => $columnName,
-                'factory_type' => null,
-                ...$defaultFields,
-            ]));
-
-        $set('factory_fields', $attributes->toArray());
     }
 
     private function isColumnWithNoParams(?string $column = null): bool

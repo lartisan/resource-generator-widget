@@ -42,6 +42,10 @@ class FactoryGenerator extends BaseGenerator
             $columnName = data_get($column, 'column_name');
             $factoryType = data_get($column, 'factory_type');
 
+            if (! $factoryType) {
+                continue;
+            }
+
             if ($this->isMethod($factoryType)) {
                 $string .= $this->buildMethodWithParameters($factoryType, $column);
             } else {
