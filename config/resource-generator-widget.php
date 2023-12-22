@@ -84,6 +84,7 @@ return [
 
         // Used to hide the column_name field
         'columns_with_no_params' => [
+            'rememberToken',
             'nullableTimestamps',
             'timestampsTz',
             'timestamps',

@@ -62,6 +62,10 @@ class MigrationStepFields
                             ->default(false)
                             ->columnSpan(1)
                             ->inline(false),
+
+                        Forms\Components\ViewField::make('Timestamps notification')
+                            ->columnSpanFull()
+                            ->view('resource-generator-widget::migration-timestamps-notification'),
                     ]),
 
                 /*$this->indexesGroup(),*/ // todo: Phase 2 - Add composite indexes?
@@ -173,7 +177,7 @@ class MigrationStepFields
                             ->label('Column name')
                             ->columnSpan(4)
                             ->hidden(fn (Forms\Get $get) => $this->isColumnWithNoParams($get('data_type')))
-                            ->readOnly(fn (Forms\Get $get) => $get('data_type') === 'softDeletes')
+                            ->helperText(fn (Forms\Get $get) => $get('data_type') === 'softDeletes' ? 'If you choose another column name, don\'t forget to define the DELETED_AT constant in your model.' : '')
                             ->lazy()
                             ->required(),
 
@@ -185,19 +189,6 @@ class MigrationStepFields
                             ->schema([
                                 // Index Types: Primary Key
                                 Forms\Components\Toggle::make('is_primary_key')
-                                    /*->afterStateUpdated(fn (Forms\Get $get, Forms\Set $set) => $set('is_unique', $get('is_primary_key')))*/
-                                    /*->disabled(function (Forms\Get $get, Forms\Components\Toggle $component) {
-                                        $repeaterColumns = collect($get('../../database_columns'));
-                                        $statePath = str($component->getContainer()->getStatePath())
-                                            ->afterLast('.')
-                                            ->toString();
-
-                                        return $repeaterColumns[$statePath]['is_primary_key'] !== true
-                                            && $repeaterColumns
-                                                ->filter(fn ($column) => $column['is_primary_key'] === true)
-                                                ->count() > 0;
-                                    })
-                                    ->live()*/
                                     ->lazy()
                                     ->rules([
                                         function (Forms\Get $get) {
