@@ -83,7 +83,6 @@ class MigrationStepFields
             });
     }
 
-
     // todo: Phase 2 - Add composite indexes?
     private function indexesGroup(): Forms\Components\Fieldset
     {
@@ -156,7 +155,7 @@ class MigrationStepFields
                             ->lazy()
                             ->columnSpan(4)
                             ->options(config('resource-generator-widget.database.column_types'))
-                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $state === 'softDeletes' ? $set('column_name','deleted_at') : '')
+                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $state === 'softDeletes' ? $set('column_name', 'deleted_at') : '')
                             ->searchable()
                             ->required(),
 
@@ -391,7 +390,7 @@ class MigrationStepFields
     private function schemaHasSoftDeletesColumn(mixed $databaseColumns): bool
     {
         return collect($databaseColumns)
-            ->filter(fn($column) => $column['data_type'] === 'softDeletes')
+            ->filter(fn ($column) => $column['data_type'] === 'softDeletes')
             ->isNotEmpty();
     }
 }

@@ -32,7 +32,7 @@ class ResourceGeneratorFakerHelpers
         return match (true) {
             is_bool($defaultValue) => $this->checkboxComponent($field),
             is_numeric($defaultValue) => $this->numericInputComponent($field),
-//            is_array($defaultValue) => $this->tagsInputComponent($field),
+            //            is_array($defaultValue) => $this->tagsInputComponent($field),
             default => $this->textInputComponent($field),
         };
     }
