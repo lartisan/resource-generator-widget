@@ -12,10 +12,10 @@ class FilamentResourceStepFields
 
     public function generate()
     {
-        return Forms\Components\Wizard\Step::make('Filament Resource')
+        return Forms\Components\Wizard\Step::make('Resource')
             ->columns()
             ->icon('heroicon-o-rectangle-stack')
-            ->description('Create the factory for the model')
+            ->description('Generate the Filament resource')
             ->schema([
                 Forms\Components\TextInput::make('resource_name')
                     ->label('Name')
