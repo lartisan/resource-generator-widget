@@ -20,4 +20,12 @@ trait NeedsPrimaryKey
     {
         return data_get($column, 'is_primary_key', false);
     }
+
+    public function isImplicitPrimaryKey(?string $dataType): bool
+    {
+        return in_array(
+            $dataType,
+            config('resource-generator-widget.database.columns_with_primary_key')
+        );
+    }
 }

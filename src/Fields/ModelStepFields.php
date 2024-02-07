@@ -3,6 +3,7 @@
 namespace Lartisan\ResourceGenerator\Fields;
 
 use Filament\Forms;
+use Lartisan\ResourceGenerator\Helpers\MigrationHelpers;
 use Lartisan\ResourceGenerator\Traits\Resolvable;
 
 class ModelStepFields
@@ -61,7 +62,7 @@ class ModelStepFields
                             })
                             ->last();
 
-                        return $state['is_primary_key'] ?? false;
+                        return app(MigrationHelpers::class)->isPrimaryKey($state);
                     }),
 
                 Forms\Components\Toggle::make('is_castable_column')
@@ -76,7 +77,7 @@ class ModelStepFields
                             })
                             ->last();
 
-                        return $state['is_primary_key'] ?? false;
+                        return app(MigrationHelpers::class)->isPrimaryKey($state);
                     }),
 
                 Forms\Components\Select::make('cast_type')

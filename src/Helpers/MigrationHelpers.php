@@ -39,7 +39,7 @@ class MigrationHelpers
     {
         $modifiers = '';
 
-        if ($this->isPrimaryKey($column) && ! in_array($column['data_type'], config('resource-generator-widget.database.columns_with_primary_key'))) {
+        if ($this->isPrimaryKey($column) && ! $this->isImplicitPrimaryKey(data_get($column, 'data_type'))) {
             $modifiers .= '->primary()';
 
             return $modifiers;

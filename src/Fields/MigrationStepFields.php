@@ -4,6 +4,7 @@ namespace Lartisan\ResourceGenerator\Fields;
 
 use Filament\Forms;
 use Illuminate\Support\Facades\Schema;
+use Lartisan\ResourceGenerator\Helpers\MigrationHelpers;
 use Lartisan\ResourceGenerator\Traits\Resolvable;
 
 class MigrationStepFields
@@ -156,7 +157,10 @@ class MigrationStepFields
                             ->lazy()
                             ->columnSpan(4)
                             ->options(config('resource-generator-widget.database.column_types'))
-                            ->afterStateUpdated(fn ($state, Forms\Set $set) => $state === 'softDeletes' ? $set('column_name','deleted_at') : '')
+                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                $state === 'softDeletes' ? $set('column_name','deleted_at') : '';
+                                $set('is_primary_key', app(MigrationHelpers::class)->isImplicitPrimaryKey($state));
+                            })
                             ->searchable()
                             ->required(),
 
@@ -180,6 +184,7 @@ class MigrationStepFields
                             ->helperText(fn (Forms\Get $get) => $get('data_type') === 'softDeletes' ? 'If you choose another column name, don\'t forget to define the DELETED_AT constant in your model.' : '')
                             ->lazy()
                             ->required(),
+//                            ->required(fn (Forms\Get $get) => ! app(MigrationHelpers::class)->isImplicitPrimaryKey($get('data_type'))),
 
                         // Modifiers & Indexes Group
                         Forms\Components\Group::make()
@@ -193,6 +198,10 @@ class MigrationStepFields
                                     ->rules([
                                         function (Forms\Get $get) {
                                             return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                                if (app(MigrationHelpers::class)->isImplicitPrimaryKey($get('data_type'))) {
+                                                    return;
+                                                }
+
                                                 $hasNoPrimaryKey = collect($get('../../database_columns'))
                                                     ->filter(fn ($column) => $column['is_primary_key'] === true)
                                                     ->count() === 0;
@@ -211,6 +220,7 @@ class MigrationStepFields
                                             || $get('has_index') === true
                                             || $get('is_nullable') === true
                                             || $get('is_unsigned') === true
+                                            || app(MigrationHelpers::class)->isImplicitPrimaryKey($get('data_type'))
                                     )
                                     ->inline(false),
 
@@ -292,7 +302,7 @@ class MigrationStepFields
         $defaultFields = collect();
 
         $columnWithPrimaryKey = collect($databaseColumns)
-            ->filter(fn ($column) => $column['is_primary_key'] === true)
+            ->filter(fn ($column) => app(MigrationHelpers::class)->isPrimaryKey($column))
             ->first();
 
         collect(config('resource-generator-widget.factory.faker_types'))
@@ -301,15 +311,14 @@ class MigrationStepFields
             ->toArray();
 
         collect($databaseColumns)
-            ->pluck('column_name')
-            ->each(fn ($columnName) => $attributes->push([
-                'column_name' => $columnName,
+            ->each(fn ($column) => $attributes->push([
+                'column_name' => $column['column_name'] ?? 'id',
                 'factory_type' => null,
                 ...$defaultFields,
             ]));
 
         $set('factory_fields', $attributes->toArray());
-        $set('primary_key_column', $columnWithPrimaryKey['column_name']);
+        $set('primary_key_column', $columnWithPrimaryKey['column_name'] ?? 'id');
     }
 
     private function mutateFillableFields(mixed $databaseColumns, Forms\Set $set): void
@@ -317,11 +326,11 @@ class MigrationStepFields
         $attributes = collect();
 
         collect($databaseColumns)
-            ->pluck('is_primary_key', 'column_name')
-            ->each(function ($isPrimaryKey, $columnName) use ($attributes) {
+            ->each(function ($column) use ($attributes) {
                 $attributes->push([
-                    'attribute_name' => $columnName,
-                    'is_primary_key' => $isPrimaryKey,
+                    'data_type' => $column['data_type'],
+                    'attribute_name' => $column['column_name'] ?? 'id',
+                    'is_primary_key' => $column['is_primary_key'],
                     'is_fillable_column' => false,
                     'is_castable_column' => false,
                 ]);
