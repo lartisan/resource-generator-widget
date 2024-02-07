@@ -75,6 +75,7 @@ return [
         ],
 
         'columns_with_primary_key' => [
+            'id',
             'bigIncrements',
             'increments',
             'mediumIncrements',

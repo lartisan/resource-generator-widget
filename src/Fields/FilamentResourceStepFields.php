@@ -51,7 +51,7 @@ class FilamentResourceStepFields
 
                         Forms\Components\Toggle::make('generate')
                             ->label('Generate')
-                            ->helperText('Check if you want to generate the resource')
+                            ->helperText('Check if you want to generate the resource schema')
                             ->default(false),
 
                         Forms\Components\Toggle::make('simple')
