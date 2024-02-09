@@ -38,6 +38,7 @@ class ResourceGeneratorWidget extends Widget implements HasActions, HasForms
                 FilamentResourceStepFields::make()->generate(),
             ])
             ->action(fn (array $data) => ResourceGeneratorManager::make()->handle($data))
+            ->closeModalByClickingAway(false)
             ->modalWidth(MaxWidth::SixExtraLarge);
     }
 }
