@@ -311,6 +311,7 @@ class MigrationStepFields
             ->toArray();
 
         collect($databaseColumns)
+            ->filter(fn ($column) => $column['data_type'] !== 'timestamps')
             ->each(fn ($column) => $attributes->push([
                 'column_name' => $column['column_name'] ?? 'id',
                 'factory_type' => null,
@@ -326,6 +327,7 @@ class MigrationStepFields
         $attributes = collect();
 
         collect($databaseColumns)
+            ->filter(fn ($column) => $column['data_type'] !== 'timestamps')
             ->each(function ($column) use ($attributes) {
                 $attributes->push([
                     'data_type' => $column['data_type'],
