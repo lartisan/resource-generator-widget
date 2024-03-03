@@ -84,7 +84,6 @@ class MigrationStepFields
             });
     }
 
-
     // todo: Phase 2 - Add composite indexes?
     private function indexesGroup(): Forms\Components\Fieldset
     {
@@ -186,7 +185,7 @@ class MigrationStepFields
                             ->helperText(fn (Forms\Get $get) => $get('data_type') === 'softDeletes' ? 'If you choose another column name, don\'t forget to define the DELETED_AT constant in your model.' : '')
                             ->lazy()
                             ->required(),
-//                            ->required(fn (Forms\Get $get) => ! app(MigrationHelpers::class)->isImplicitPrimaryKey($get('data_type'))),
+                        //                            ->required(fn (Forms\Get $get) => ! app(MigrationHelpers::class)->isImplicitPrimaryKey($get('data_type'))),
 
                         // Modifiers & Indexes Group
                         Forms\Components\Group::make()
