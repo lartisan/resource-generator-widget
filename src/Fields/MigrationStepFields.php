@@ -158,7 +158,9 @@ class MigrationStepFields
                             ->columnSpan(4)
                             ->options(config('resource-generator-widget.database.column_types'))
                             ->afterStateUpdated(function ($state, Forms\Set $set) {
-                                $state === 'softDeletes' ? $set('column_name','deleted_at') : '';
+                                if ($state === 'softDeletes') {
+                                    $set('column_name', 'deleted_at');
+                                }
                                 $set('is_primary_key', app(MigrationHelpers::class)->isImplicitPrimaryKey($state));
                             })
                             ->searchable()
