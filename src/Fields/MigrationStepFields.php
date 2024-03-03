@@ -278,12 +278,15 @@ class MigrationStepFields
                                     ->disabled(
                                         fn (Forms\Get $get) => $get('is_primary_key') === true
                                     )
+                                    ->hidden(
+                                        fn (Forms\Get $get) => $this->isColumnWithoutDefaults($get('data_type'))
+                                    )
                                     ->inline(false),
 
                                 Forms\Components\TextInput::make('default_value')
                                     ->label('Default value')
                                     ->columnSpan(2)
-                                    ->hidden(fn (Forms\Get $get) => $get('has_default') === false)
+                                    ->hidden(fn (Forms\Get $get) => $get('has_default') === false || $this->isColumnWithoutDefaults($get('data_type')))
                                     ->disabled(
                                         fn (Forms\Get $get) => $get('is_primary_key') === true
                                     )
@@ -352,6 +355,18 @@ class MigrationStepFields
         return in_array(
             $column,
             config('resource-generator-widget.database.columns_with_no_params')
+        );
+    }
+
+    private function isColumnWithoutDefaults(?string $column = null): bool
+    {
+        if ($column === null) {
+            return false;
+        }
+
+        return in_array(
+            $column,
+            config('resource-generator-widget.database.columns_without_defaults')
         );
     }
 

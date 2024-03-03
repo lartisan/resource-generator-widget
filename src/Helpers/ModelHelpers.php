@@ -30,4 +30,9 @@ class ModelHelpers
             ->filter(fn ($column) => $column['data_type'] === 'softDeletes')
             ->isNotEmpty();
     }
+
+    public function hasFactory(array $data): bool
+    {
+        return data_get($data, 'create_factory', false);
+    }
 }

@@ -2,15 +2,12 @@
 
 namespace {{ namespace }};
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;{{ has_factory_import }}
+use Illuminate\Database\Eloquent\Model;{{ soft_deletes_import }}
 
 class {{ class }} extends Model
 {
-    use HasFactory;
-    use HasUuids;{{ soft_deletes }}
+    use HasUuids;{{ has_factory_trait }}{{ soft_deletes_trait }}
 
     protected $primaryKey = 'uuid';{{ fillable }}{{ castable }}
 }

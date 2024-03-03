@@ -206,6 +206,24 @@ return [
                 'length' => 26,
             ],
         ],
+
+        'columns_without_defaults' => [
+            'blob',
+            'geometry',
+            'geometryCollection',
+            'json',
+            'jsonb',
+            'lineString',
+            'longText',
+            'mediumText',
+            'multiLineString',
+            'multiPoint',
+            'multiPolygon',
+            'point',
+            'polygon',
+            'text',
+            'tinyText',
+        ],
     ],
 
     'model' => [

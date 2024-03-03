@@ -37,7 +37,10 @@ class ModelGenerator extends BaseGenerator
             'class' => $className,
             'fillable' => $this->setFillableAttributes($attributes),
             'castable' => $this->setCastableAttributes($attributes),
-            'soft_deletes' => $this->setSoftDeletesTrait($data),
+            'soft_deletes_import' => $this->setSoftDeletesImport($data),
+            'soft_deletes_trait' => $this->setSoftDeletesTrait($data),
+            'has_factory_import' => $this->setHasFactoryImport($data),
+            'has_factory_trait' => $this->setHasFactoryTrait($data),
         ];
 
         if ($this->helpers->hasPrimaryKey($data)) {
@@ -111,6 +114,17 @@ class ModelGenerator extends BaseGenerator
                 PHP;
     }
 
+    private function setSoftDeletesImport(array $data): string
+    {
+        $string = <<<PHP
+                use Illuminate\Database\Eloquent\SoftDeletes;
+                PHP;
+
+        return $this->helpers->hasFactory($data)
+            ? $string
+            : '';
+    }
+
     private function setSoftDeletesTrait(array $data): string
     {
         $string = <<<PHP
@@ -118,6 +132,28 @@ class ModelGenerator extends BaseGenerator
                 PHP;
 
         return $this->helpers->hasSoftDeletes($data)
+            ? $string
+            : '';
+    }
+
+    private function setHasFactoryImport(array $data): string
+    {
+        $string = <<<PHP
+                use Illuminate\Database\Eloquent\Factories\HasFactory;
+                PHP;
+
+        return $this->helpers->hasFactory($data)
+            ? $string
+            : '';
+    }
+
+    private function setHasFactoryTrait(array $data): string
+    {
+        $string = <<<PHP
+                \n\tuse HasFactory;
+                PHP;
+
+        return $this->helpers->hasFactory($data)
             ? $string
             : '';
     }

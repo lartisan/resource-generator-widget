@@ -2,11 +2,9 @@
 
 namespace {{ namespace }};
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+{{ has_factory_import }}use Illuminate\Database\Eloquent\Model;{{ soft_deletes_import }}
 
 class {{ class }} extends Model
 {
-    use HasFactory;{{ soft_deletes }}{{ fillable }}{{ castable }}
+    {{ has_factory_trait }}{{ soft_deletes_trait }}{{ fillable }}{{ castable }}
 }
