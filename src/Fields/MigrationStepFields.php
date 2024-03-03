@@ -404,7 +404,7 @@ class MigrationStepFields
     private function schemaHasSoftDeletesColumn(mixed $databaseColumns): bool
     {
         return collect($databaseColumns)
-            ->filter(fn($column) => $column['data_type'] === 'softDeletes')
+            ->filter(fn ($column) => $column['data_type'] === 'softDeletes')
             ->isNotEmpty();
     }
 }

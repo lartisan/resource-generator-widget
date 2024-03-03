@@ -3,7 +3,6 @@
 namespace Lartisan\ResourceGenerator\Fields;
 
 use Filament\Forms;
-use Filament\Forms\Components\Component;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Lartisan\ResourceGenerator\Helpers\ResourceGeneratorFakerHelpers;

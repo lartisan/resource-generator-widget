@@ -121,5 +121,4 @@ class FactoryGenerator extends BaseGenerator
 
         return "'$key:".$value."'";
     }
-
 }
