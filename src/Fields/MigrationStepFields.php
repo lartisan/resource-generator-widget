@@ -53,12 +53,12 @@ class MigrationStepFields
                             ->placeholder('E.g.: my_table_name'),
 
                         Forms\Components\Toggle::make('run_migrations')
-                            ->label('Run the migration?')
+                            ->label('Run the migration')
                             ->lazy()
                             ->helperText(
                                 fn (bool $state) => $state === true
                                     ? 'Uncheck if you want to double check the migration before running it.'
-                                    : str('Check if you want to **run the migration** after submitting the form.')->inlineMarkdown()->toHtmlString()
+                                    : str('Want to run the **php artisan migrate** command after submitting the form?')->inlineMarkdown()->toHtmlString()
                             )
                             ->default(false)
                             ->columnSpan(1)
